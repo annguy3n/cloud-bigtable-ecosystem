@@ -24,6 +24,9 @@ This skill provides core workflows and guidance for administering and developing
 ### 1. Querying Data
 Use SQL for complex transforms or aggregations and key-value APIs for simpler query patterns.
 *Note: Use exact match, prefix (_key LIKE 'myprefix%') or range predicates on `_key` to avoid expensive unbounded scans.*
+If expensive scans (either unbounded or prefix or range queries scanning a large range) are unavoidable due to multiple access patterns that can’t all be accommodated in a single schema, consider one of these two options:
+- If the query  will be used in user facing and/or latency sensitive applications, use continuous materialized views with keys optimized for the additional access patterns.
+- If secondary access patterns are infrequent, batch patterns like ETL, ML model training or analytical read-only tasks, use Bigtable Data Boost instead. 
 
 ### 2. Manipulating Data
 Use key-value APIs for insert, update, increment and delete operations. SQL API is read-only.
@@ -37,7 +40,7 @@ SQL API doesn't support DDL operations. Table creation, deletion, updates should
   - [infrastructure_management.md](references/infrastructure_management.md) - Provisioning instances, clusters, and table schemas.
   - [cli_data_access.md](references/cli_data_access.md) - Reading and writing data via the `cbt` CLI.
 - **Design & Discovery**:
-  - [schema_design.md](references/schema_design.md) - Best practices for row keys and performance.
+  - [schema_design.md](references/schema_design.md) - Best practices for row keys and performance with tables and continuous materialized views.
   - [dataplex.md](references/dataplex.md) - Data catalog search for Bigtable assets.
 - **Querying & Code**:
   - [sql_guide.md](references/sql_guide.md) - Querying structured row keys via SQL and CLI.
